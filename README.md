@@ -73,3 +73,7 @@ Build, typecheck and browser verification have not yet been run for this branch.
 ## Appearance settings
 
 The Settings navigation screen supports six built-in palettes (Dark, Light, Nord, Evergreen, Midnight and Sepia), five font-family stacks, base font size from 12–22 px, six accent choices, a live preview and a reset button. Preferences are persisted locally using browser localStorage and applied through CSS theme variables; they are not GitHub commits and do not require repository access. Settings currently appears after GitHub connection. Build/browser verification remains pending.
+
+## Unified editor update
+
+The Unified SideQuest details selector now accepts both structured JSON tracks/SideQuests and legacy Markdown tracks/projects. JSON tasks, milestones and notes can be added, edited, toggled and removed. Markdown checklist lines can be toggled, renamed and removed in place; the editor preserves other source lines and uses GitHub SHA conflict checks. New Markdown tasks/milestones/notes are stored in the managed JSON block, not appended to legacy checklist sections. Brain Vault associations can be added and removed for both formats. Legacy headings and non-checkbox milestone prose remain documentation-only until a deliberate conversion flow is implemented. Repository-managed document routing and cross-repo migration are still not implemented. Build/browser verification is pending.
