@@ -19,7 +19,7 @@ export default function UnifiedDetail({token,items,onSaved}:Props){
 const[chosen,setChosen]=useState('');const[task,setTask]=useState('');const[milestone,setMilestone]=useState('');const[note,setNote]=useState('');const[association,setAssociation]=useState('');const[busy,setBusy]=useState(false);const[error,setError]=useState('');const[editing,setEditing]=useState('');const[editTitle,setEditTitle]=useState('');
 const candidates=items.filter(x=>x.kind==='project'||x.kind==='track');const active=items.find(x=>sourceKey(x)===chosen);
 const structured=active?parseRecord(active.entry):null;const legacy=active&&!structured?extract(active.entry.content):null;
-const managed=structured?structured:legacy?.managed||empty();
+const managed:Managed=structured?{tasks:structured.tasks,milestones:structured.milestones,notes:structured.notes,associations:structured.associations||[]}:legacy?.managed||empty();
 const existing=useMemo(()=>active&&!structured?legacyLines(active.entry.content):[],[active,structured]);
 const related=active?items.filter(x=>x.kind==='brain'&&(managed.associations.includes(x.id)||refs(x.entry.content,active.id))):[];
 async function saveContent(content:string){if(!active||legacy?.invalid)return false;setBusy(true);setError('');try{await writeEntry(token,active.entry,content,'ledger: update details '+active.id);await onSaved();return true}catch(e){setError('Save failed; synchronize before retrying: '+String(e));return false}finally{setBusy(false)}}
