@@ -47,3 +47,9 @@ The new **SideQuests workspace** supports form-based creation of tracks and Side
 - Discarded ideas remain stored for audit rather than being permanently deleted.
 
 **Known limitations:** Existing Markdown records are not yet migrated to the structured editor; the advanced raw-file editor remains accessible. Creating and promoting use multiple independent GitHub writes, not atomic transactions. This branch has not yet passed an automated build or browser test. Structured records need validation, conflict/retry improvements and a proper GitHub OAuth flow before production deployment.
+
+## Repository bindings and progress ownership (initial implementation)
+
+Each structured track or SideQuest can link an accessible GitHub repository and branch through its Edit details form. The binding stores the repository full name, branch, a progress ownership choice (`ledger` or `linked`), and an optional progress document path. The detail screen fetches the latest commit from the linked repository and links to the repository. This is **activity evidence**, not verified milestone completion.
+
+**Important:** The ownership choice is metadata only in this version. It does not yet route milestone/task writes into the linked repository, parse its progress document, or reconcile duplicate documents. Structured milestones still write to the SideQuests Ledger record. Implement explicit progress adapters and source-aware write routing before describing linked repositories as authoritative in practice. Existing Markdown projects are not yet covered by structured repository bindings.
