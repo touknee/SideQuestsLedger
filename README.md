@@ -91,3 +91,9 @@ The unified detail editor detects some milestone headings and plain bullet/numbe
 ## Canonical records and attachments
 
 See [docs/RECORD-STANDARD.md](docs/RECORD-STANDARD.md) for the v1 standard and safe conversion checklist grounded in the existing `touknee/SideQuests` registry. The Attachments screen stores up to 20 MB per file (images, PDF, ZIP) in the currently authoritative record repository, verifies each upload by reading back its content, and indexes it in `sidequests-assets/<ID>/manifest.json`. Image preview, PDF open and other-file downloads are supported. Uploads require GitHub Contents read/write permissions. The current implementation has not been build- or browser-tested, and the historical SideQuests records have not been bulk converted.
+
+## Initial portfolio import — 2026-11-15
+
+Fifteen identity-only records have been added on the feature branch: P000–P011, T000, T001 and E000. These were seeded from the actual `touknee/SideQuests` canonical registry and dated checkpoint, not from generated example projects. Every record includes `sourceReferences` and `importStatus: "identity-only"`; its empty tasks, milestones and notes **do not mean no work exists**. Statuses are source-snapshot labels and may be superseded by more recent documentation. Import timestamps indicate import time, not original project creation time.
+
+Next reconciliation gate: inspect each field guide, historical decisions, and progress evidence; populate tasks/milestones only after verification. Never automatically delete or move the original source repository's documents. P006 and P009 field-guide filenames were not established during this first pass, so only registry links were attached. Archive/trash and attachments are still untested. Full build/browser verification is pending.
