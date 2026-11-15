@@ -37,3 +37,13 @@ npm run build
 The new **SideQuests workspace** supports form-based creation of tracks and SideQuests (projects, experiences, experiments, and ideas), with optional track assignment and allowed type selection. Each structured track/SideQuest supports milestones, tasks, notes, completion checkboxes and status updates. Changes write JSON to `ledger/tracks/T###.json` or `ledger/sidequests/{P,E,X,I}###.json` using GitHub's Contents API and file SHA optimistic concurrency checks. IDs are computed from loaded selected-repository records, using max existing number + 1; repository sync is required before creating records. Concurrent creations may still collide, in which case refresh and retry.
 
 **Migration limitation:** Legacy Markdown tracks and projects are displayed in the raw records browser, but are **not yet editable in structured forms**. They must be mapped to the canonical schema first; the app does not rewrite or fabricate legacy data. Track child relationships currently cover structured records only. Notes, tasks and milestones are stored inline in the parent JSON document. For now, the advanced source editor remains available for existing files. There is no automatic Change Journal entry yet.
+
+## Idea inbox and editable records (in progress)
+
+- Capture an informal idea from the workspace without reserving a formal SideQuest ID. Drafts live under `ledger/drafts/DRAFT-<uuid>.json`.
+- Promote an idea into a SideQuest and assign a P/E/X/I-series ID at promotion. The original draft is marked Promoted with a link to the new ID; if the second commit fails, reconcile manually before retrying.
+- Create SideQuests without a track, then assign or reassign them later through the details form. Track accepted-kind rules constrain assignment.
+- Edit names, descriptions, status, track assignment and track allowed kinds via forms. Remove individual tasks, milestones or notes; Git history retains old versions.
+- Discarded ideas remain stored for audit rather than being permanently deleted.
+
+**Known limitations:** Existing Markdown records are not yet migrated to the structured editor; the advanced raw-file editor remains accessible. Creating and promoting use multiple independent GitHub writes, not atomic transactions. This branch has not yet passed an automated build or browser test. Structured records need validation, conflict/retry improvements and a proper GitHub OAuth flow before production deployment.
