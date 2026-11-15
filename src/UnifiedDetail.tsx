@@ -21,7 +21,7 @@ const[chosen,setChosen]=useState('');const[task,setTask]=useState('');const[mile
 const candidates=items.filter(x=>(x.kind==='project'||x.kind==='track')&&lifecycleOf(x)==='active');const active=items.find(x=>sourceKey(x)===chosen&&lifecycleOf(x)==='active');
 const[remote,setRemote]=useState<import('./github').Entry|null>(null);const[remoteError,setRemoteError]=useState('');
 useEffect(()=>{setRemote(null);setRemoteError('');if(!active)return;let cancelled=false;authoritativeEntry(token,active).then(entry=>{if(!cancelled)setRemote(entry)}).catch(e=>{if(!cancelled)setRemoteError(String(e))});return()=>{cancelled=true}},[chosen,active?.entry.sha,token]);
-const source=remote||null;const structured=source?parseRecord(source):null;const legacy=source&&!structured?extract(source.content):null;
+const source=remote||null;const structured=source?parseRecord({...source,path:source.path.startsWith('ledger/')?source.path:'ledger/sidequests/'+active?.id+'.json'}):null;const legacy=source&&!structured?extract(source.content):null;
 const managed:Managed=structured?{tasks:structured.tasks,milestones:structured.milestones,notes:structured.notes,associations:structured.associations||[]}:legacy?.managed||empty();
 const existing=useMemo(()=>source&&!structured?legacyLines(source.content):[],[active,structured]);
 const related=active?items.filter(x=>x.kind==='brain'&&(managed.associations.includes(x.id)||refs(x.entry.content,active.id))):[];
