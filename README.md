@@ -69,3 +69,7 @@ The unified detail panel lists detected legacy Markdown tracks and projects. It 
 Migration must be idempotent, resumable after partial failures, conflict-aware and reversible; GitHub multi-repository writes are not transactional. **Do not treat linking a repo as a completed migration.** The current implementation has repository-link metadata and activity display only; automatic migration, linked-repo write routing, archival/removal flows and unified structured-JSON/Markdown record navigation are still pending.
 
 Build, typecheck and browser verification have not yet been run for this branch.
+
+## Appearance settings
+
+The Settings navigation screen supports six built-in palettes (Dark, Light, Nord, Evergreen, Midnight and Sepia), five font-family stacks, base font size from 12–22 px, six accent choices, a live preview and a reset button. Preferences are persisted locally using browser localStorage and applied through CSS theme variables; they are not GitHub commits and do not require repository access. Settings currently appears after GitHub connection. Build/browser verification remains pending.
