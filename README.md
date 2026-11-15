@@ -77,3 +77,13 @@ The Settings navigation screen supports six built-in palettes (Dark, Light, Nord
 ## Unified editor update
 
 The Unified SideQuest details selector now accepts both structured JSON tracks/SideQuests and legacy Markdown tracks/projects. JSON tasks, milestones and notes can be added, edited, toggled and removed. Markdown checklist lines can be toggled, renamed and removed in place; the editor preserves other source lines and uses GitHub SHA conflict checks. New Markdown tasks/milestones/notes are stored in the managed JSON block, not appended to legacy checklist sections. Brain Vault associations can be added and removed for both formats. Legacy headings and non-checkbox milestone prose remain documentation-only until a deliberate conversion flow is implemented. Repository-managed document routing and cross-repo migration are still not implemented. Build/browser verification is pending.
+
+## Lifecycle and migration (development)
+
+Archive & Trash screen provides reversible Archive, Unarchive, Move to Trash, Recover and Restore to Archive actions for structured JSON records. Permanent registry-file deletion requires Trash status, an independently verified migrated project document and exact ID confirmation; it never deletes the project repository. Git history retains prior versions of deleted registry files. These lifecycle actions do not yet cover all legacy Markdown files.
+
+A structured-record migration copies tasks, milestones, notes and metadata to a chosen destination JSON file, reads the file back to verify byte-for-byte content, and then updates the Ledger registry with an authoritative destination pointer. The Ledger retains the ID and relationship metadata while clearing local progress arrays. Future Unified Detail reads and edits route to the linked JSON file. If registry-pointer update fails after destination creation, the original remains authoritative and the destination needs reconciliation. The migration currently handles one structured JSON record only: related Markdown files, attachments, subdirectories and other documentation are **not** transferred. Never claim a whole project is migrated based on this operation.
+
+## Reviewed milestone conversion
+
+The unified detail editor detects some milestone headings and plain bullet/numbered items within milestone sections of legacy Markdown. Users select candidates before conversion. It copies them into editable managed milestones, preserves original Markdown, tracks converted source references to prevent repeat suggestions, and initializes completion as unconfirmed/unchecked. Detection is heuristic and does not cover arbitrary prose paragraphs. GitHub SHA-based writes reject stale versions; build and browser tests remain pending.
