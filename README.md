@@ -87,3 +87,7 @@ A structured-record migration copies tasks, milestones, notes and metadata to a 
 ## Reviewed milestone conversion
 
 The unified detail editor detects some milestone headings and plain bullet/numbered items within milestone sections of legacy Markdown. Users select candidates before conversion. It copies them into editable managed milestones, preserves original Markdown, tracks converted source references to prevent repeat suggestions, and initializes completion as unconfirmed/unchecked. Detection is heuristic and does not cover arbitrary prose paragraphs. GitHub SHA-based writes reject stale versions; build and browser tests remain pending.
+
+## Canonical records and attachments
+
+See [docs/RECORD-STANDARD.md](docs/RECORD-STANDARD.md) for the v1 standard and safe conversion checklist grounded in the existing `touknee/SideQuests` registry. The Attachments screen stores up to 20 MB per file (images, PDF, ZIP) in the currently authoritative record repository, verifies each upload by reading back its content, and indexes it in `sidequests-assets/<ID>/manifest.json`. Image preview, PDF open and other-file downloads are supported. Uploads require GitHub Contents read/write permissions. The current implementation has not been build- or browser-tested, and the historical SideQuests records have not been bulk converted.
