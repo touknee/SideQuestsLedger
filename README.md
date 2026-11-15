@@ -31,3 +31,9 @@ npm run build
 2. Structured CRUD for projects, tracks, milestones and Brain Vault with validated IDs, relationships and Change Journal updates.
 3. GitHub OAuth via a secure server-side exchange, least-privilege scopes and optional PR-based changes.
 4. Automated tests, PWA icons/assets, deployment, offline read cache and conflict handling.
+
+## Structured workspace (development branch)
+
+The new **SideQuests workspace** supports form-based creation of tracks and SideQuests (projects, experiences, experiments, and ideas), with optional track assignment and allowed type selection. Each structured track/SideQuest supports milestones, tasks, notes, completion checkboxes and status updates. Changes write JSON to `ledger/tracks/T###.json` or `ledger/sidequests/{P,E,X,I}###.json` using GitHub's Contents API and file SHA optimistic concurrency checks. IDs are computed from loaded selected-repository records, using max existing number + 1; repository sync is required before creating records. Concurrent creations may still collide, in which case refresh and retry.
+
+**Migration limitation:** Legacy Markdown tracks and projects are displayed in the raw records browser, but are **not yet editable in structured forms**. They must be mapped to the canonical schema first; the app does not rewrite or fabricate legacy data. Track child relationships currently cover structured records only. Notes, tasks and milestones are stored inline in the parent JSON document. For now, the advanced source editor remains available for existing files. There is no automatic Change Journal entry yet.
