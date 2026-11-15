@@ -53,3 +53,19 @@ The new **SideQuests workspace** supports form-based creation of tracks and Side
 Each structured track or SideQuest can link an accessible GitHub repository and branch through its Edit details form. The binding stores the repository full name, branch, a progress ownership choice (`ledger` or `linked`), and an optional progress document path. The detail screen fetches the latest commit from the linked repository and links to the repository. This is **activity evidence**, not verified milestone completion.
 
 **Important:** The ownership choice is metadata only in this version. It does not yet route milestone/task writes into the linked repository, parse its progress document, or reconcile duplicate documents. Structured milestones still write to the SideQuests Ledger record. Implement explicit progress adapters and source-aware write routing before describing linked repositories as authoritative in practice. Existing Markdown projects are not yet covered by structured repository bindings.
+
+## Unified legacy detail view (in development)
+
+The unified detail panel lists detected legacy Markdown tracks and projects. It preserves original Markdown verbatim while writing new tasks, milestones, notes and explicit Brain Vault associations to a delimited JSON section in the same Markdown file. Existing Markdown checklist items are displayed read-only rather than rewritten without review. Brain Vault entries referenced by project/track ID in their text are surfaced as related records; users can add explicit associations in the project's managed section. No legacy record is silently converted or deleted.
+
+### Dedicated repository lifecycle (design contract; not implemented yet)
+
+1. Ledger-managed: the Ledger owns the detailed project documents.
+2. Link a dedicated repository and prepare a manifest of source documents and destination paths.
+3. Preview and confirm migration; copy to the destination branch, verify content and destination commit SHAs, then atomically switch the Ledger registry pointer where possible.
+4. Repository-managed: the dedicated repo owns detailed milestones, tasks and documentation. The Ledger stores only ID, identity, track relationships, repository reference and derived summary; the UI reads/writes progress in the authoritative repository.
+5. Archive/remove from Ledger: leave the dedicated repository and all its Git history untouched. Removing a Ledger-managed project without a dedicated repo requires an explicit archive/export safeguard.
+
+Migration must be idempotent, resumable after partial failures, conflict-aware and reversible; GitHub multi-repository writes are not transactional. **Do not treat linking a repo as a completed migration.** The current implementation has repository-link metadata and activity display only; automatic migration, linked-repo write routing, archival/removal flows and unified structured-JSON/Markdown record navigation are still pending.
+
+Build, typecheck and browser verification have not yet been run for this branch.
