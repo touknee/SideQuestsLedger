@@ -90,7 +90,7 @@ The unified detail editor detects some milestone headings and plain bullet/numbe
 
 ## Canonical records and attachments
 
-See [docs/RECORD-STANDARD.md](docs/RECORD-STANDARD.md) for the v1 standard and safe conversion checklist grounded in the existing `touknee/SideQuests` registry. The Attachments screen stores up to 20 MB per file (images, PDF, ZIP) in the currently authoritative record repository, verifies each upload by reading back its content, and indexes it in `sidequests-assets/<ID>/manifest.json`. Image preview, PDF open and other-file downloads are supported. Uploads require GitHub Contents read/write permissions. The current implementation has not been build- or browser-tested, and the historical SideQuests records have not been bulk converted.
+See [docs/RECORD-STANDARD.md](docs/RECORD-STANDARD.md) for the v1 standard and safe conversion checklist grounded in the existing `touknee/SideQuests` registry. The Attachments screen stores up to 20 MB per file (images, PDF, ZIP) in the currently authoritative record repository, verifies each upload by reading back its content, and indexes it in `sidequests-assets/<ID>/manifest.json`. Images, videos and audio use inline previews/players; PDFs open in a separate browser tab and ZIP/other files download. Uploads require GitHub Contents read/write permissions. The current implementation has not been build- or browser-tested, and the historical SideQuests records have not been bulk converted.
 
 ## Initial portfolio import — 2026-11-15
 
