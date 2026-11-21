@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "P001",
+  "recordType": "sidequest",
+  "kind": "project",
+  "name": "BrickVault",
+  "description": "",
+  "status": "Parked",
+  "lifecycle": "active",
+  "trackId": null,
+  "associations": [],
+  "milestones": [],
+  "tasks": [],
+  "notes": [],
+  "sourceReferences": [
+    {
+      "label": "Canonical registry",
+      "repository": "touknee/SideQuests",
+      "path": "docs/SIDE-QUEST-BACKLOG.md",
+      "url": "https://github.com/touknee/SideQuests/blob/main/docs/SIDE-QUEST-BACKLOG.md"
+    },
+    {
+      "label": "Field guide",
+      "repository": "touknee/SideQuests",
+      "path": "docs/field-guides/P001-BrickVault.md",
+      "url": "https://github.com/touknee/SideQuests/blob/main/docs/field-guides/P001-BrickVault.md"
+    }
+  ],
+  "importStatus": "identity-only",
+  "importedAt": "2026-11-15T00:00:00.000Z",
+  "createdAt": "2026-11-15T00:00:00.000Z",
+  "updatedAt": "2026-11-15T00:00:00.000Z"
+}

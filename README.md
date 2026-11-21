@@ -1,2 +1,99 @@
-# SideQuestsLedger
-UI Viewer for SideQuests
+# SideQuests Ledger
+
+GitHub-backed React + TypeScript progressive web app for browsing SideQuests projects, tracks, milestones and Brain Vault records.
+
+## Run
+
+```bash
+npm install
+npm run dev
+npm run build
+```
+
+## MVP workflow
+
+1. Create a GitHub **fine-grained personal access token** scoped to the repositories containing your ledgers, with **Contents: Read and write** permissions. Do not paste a token into issues, commits, or chat.
+2. Connect using the app. The token is held in browser sessionStorage, not the repo. Disconnect clears it. **This is temporary token authentication, not GitHub OAuth.**
+3. Select the repositories holding the canonical records and Sync. The app discovers Markdown/JSON/YAML files with matching paths/IDs and loads them without generating data.
+4. Open a record, edit its source, and commit the change back to its existing GitHub file. GitHub SHA checks reject stale writes. You can also create a new Markdown file.
+
+## Scope and limitations
+
+- **Early MVP, not yet verified in a browser or deployed.** The current UI is a source-file editor, not a structured milestone/task form. Matching is heuristic and some records may be unrecognized or duplicated. No records are fabricated.
+- Authentication must be upgraded to a backend-supported GitHub OAuth flow (PKCE where applicable) before a public release. Avoid granting broad repository access. Session storage reduces persistence but does not eliminate XSS risks.
+- Writes currently commit directly to the selected repository's default branch; a review/PR workflow, conflict UI, validation and Change Journal integration are planned.
+- PWA shell caching is best-effort; offline editing/sync is not implemented. Do not assume all ledger data is available offline.
+- No GitHub Actions build is added to avoid consuming Actions minutes; build locally or through a separate deployment provider.
+
+## Next milestones
+
+1. Identify canonical ledger schema and source repositories, implement parsers with fixtures and tests.
+2. Structured CRUD for projects, tracks, milestones and Brain Vault with validated IDs, relationships and Change Journal updates.
+3. GitHub OAuth via a secure server-side exchange, least-privilege scopes and optional PR-based changes.
+4. Automated tests, PWA icons/assets, deployment, offline read cache and conflict handling.
+
+## Structured workspace (development branch)
+
+The new **SideQuests workspace** supports form-based creation of tracks and SideQuests (projects, experiences, experiments, and ideas), with optional track assignment and allowed type selection. Each structured track/SideQuest supports milestones, tasks, notes, completion checkboxes and status updates. Changes write JSON to `ledger/tracks/T###.json` or `ledger/sidequests/{P,E,X,I}###.json` using GitHub's Contents API and file SHA optimistic concurrency checks. IDs are computed from loaded selected-repository records, using max existing number + 1; repository sync is required before creating records. Concurrent creations may still collide, in which case refresh and retry.
+
+**Migration limitation:** Legacy Markdown tracks and projects are displayed in the raw records browser, but are **not yet editable in structured forms**. They must be mapped to the canonical schema first; the app does not rewrite or fabricate legacy data. Track child relationships currently cover structured records only. Notes, tasks and milestones are stored inline in the parent JSON document. For now, the advanced source editor remains available for existing files. There is no automatic Change Journal entry yet.
+
+## Idea inbox and editable records (in progress)
+
+- Capture an informal idea from the workspace without reserving a formal SideQuest ID. Drafts live under `ledger/drafts/DRAFT-<uuid>.json`.
+- Promote an idea into a SideQuest and assign a P/E/X/I-series ID at promotion. The original draft is marked Promoted with a link to the new ID; if the second commit fails, reconcile manually before retrying.
+- Create SideQuests without a track, then assign or reassign them later through the details form. Track accepted-kind rules constrain assignment.
+- Edit names, descriptions, status, track assignment and track allowed kinds via forms. Remove individual tasks, milestones or notes; Git history retains old versions.
+- Discarded ideas remain stored for audit rather than being permanently deleted.
+
+**Known limitations:** Existing Markdown records are not yet migrated to the structured editor; the advanced raw-file editor remains accessible. Creating and promoting use multiple independent GitHub writes, not atomic transactions. This branch has not yet passed an automated build or browser test. Structured records need validation, conflict/retry improvements and a proper GitHub OAuth flow before production deployment.
+
+## Repository bindings and progress ownership (initial implementation)
+
+Each structured track or SideQuest can link an accessible GitHub repository and branch through its Edit details form. The binding stores the repository full name, branch, a progress ownership choice (`ledger` or `linked`), and an optional progress document path. The detail screen fetches the latest commit from the linked repository and links to the repository. This is **activity evidence**, not verified milestone completion.
+
+**Important:** The ownership choice is metadata only in this version. It does not yet route milestone/task writes into the linked repository, parse its progress document, or reconcile duplicate documents. Structured milestones still write to the SideQuests Ledger record. Implement explicit progress adapters and source-aware write routing before describing linked repositories as authoritative in practice. Existing Markdown projects are not yet covered by structured repository bindings.
+
+## Unified legacy detail view (in development)
+
+The unified detail panel lists detected legacy Markdown tracks and projects. It preserves original Markdown verbatim while writing new tasks, milestones, notes and explicit Brain Vault associations to a delimited JSON section in the same Markdown file. Existing Markdown checklist items are displayed read-only rather than rewritten without review. Brain Vault entries referenced by project/track ID in their text are surfaced as related records; users can add explicit associations in the project's managed section. No legacy record is silently converted or deleted.
+
+### Dedicated repository lifecycle (design contract; not implemented yet)
+
+1. Ledger-managed: the Ledger owns the detailed project documents.
+2. Link a dedicated repository and prepare a manifest of source documents and destination paths.
+3. Preview and confirm migration; copy to the destination branch, verify content and destination commit SHAs, then atomically switch the Ledger registry pointer where possible.
+4. Repository-managed: the dedicated repo owns detailed milestones, tasks and documentation. The Ledger stores only ID, identity, track relationships, repository reference and derived summary; the UI reads/writes progress in the authoritative repository.
+5. Archive/remove from Ledger: leave the dedicated repository and all its Git history untouched. Removing a Ledger-managed project without a dedicated repo requires an explicit archive/export safeguard.
+
+Migration must be idempotent, resumable after partial failures, conflict-aware and reversible; GitHub multi-repository writes are not transactional. **Do not treat linking a repo as a completed migration.** The current implementation has repository-link metadata and activity display only; automatic migration, linked-repo write routing, archival/removal flows and unified structured-JSON/Markdown record navigation are still pending.
+
+Build, typecheck and browser verification have not yet been run for this branch.
+
+## Appearance settings
+
+The Settings navigation screen supports six built-in palettes (Dark, Light, Nord, Evergreen, Midnight and Sepia), five font-family stacks, base font size from 12–22 px, six accent choices, a live preview and a reset button. Preferences are persisted locally using browser localStorage and applied through CSS theme variables; they are not GitHub commits and do not require repository access. Settings currently appears after GitHub connection. Build/browser verification remains pending.
+
+## Unified editor update
+
+The Unified SideQuest details selector now accepts both structured JSON tracks/SideQuests and legacy Markdown tracks/projects. JSON tasks, milestones and notes can be added, edited, toggled and removed. Markdown checklist lines can be toggled, renamed and removed in place; the editor preserves other source lines and uses GitHub SHA conflict checks. New Markdown tasks/milestones/notes are stored in the managed JSON block, not appended to legacy checklist sections. Brain Vault associations can be added and removed for both formats. Legacy headings and non-checkbox milestone prose remain documentation-only until a deliberate conversion flow is implemented. Repository-managed document routing and cross-repo migration are still not implemented. Build/browser verification is pending.
+
+## Lifecycle and migration (development)
+
+Archive & Trash screen provides reversible Archive, Unarchive, Move to Trash, Recover and Restore to Archive actions for structured JSON records. Permanent registry-file deletion requires Trash status, an independently verified migrated project document and exact ID confirmation; it never deletes the project repository. Git history retains prior versions of deleted registry files. These lifecycle actions do not yet cover all legacy Markdown files.
+
+A structured-record migration copies tasks, milestones, notes and metadata to a chosen destination JSON file, reads the file back to verify byte-for-byte content, and then updates the Ledger registry with an authoritative destination pointer. The Ledger retains the ID and relationship metadata while clearing local progress arrays. Future Unified Detail reads and edits route to the linked JSON file. If registry-pointer update fails after destination creation, the original remains authoritative and the destination needs reconciliation. The migration currently handles one structured JSON record only: related Markdown files, attachments, subdirectories and other documentation are **not** transferred. Never claim a whole project is migrated based on this operation.
+
+## Reviewed milestone conversion
+
+The unified detail editor detects some milestone headings and plain bullet/numbered items within milestone sections of legacy Markdown. Users select candidates before conversion. It copies them into editable managed milestones, preserves original Markdown, tracks converted source references to prevent repeat suggestions, and initializes completion as unconfirmed/unchecked. Detection is heuristic and does not cover arbitrary prose paragraphs. GitHub SHA-based writes reject stale versions; build and browser tests remain pending.
+
+## Canonical records and attachments
+
+See [docs/RECORD-STANDARD.md](docs/RECORD-STANDARD.md) for the v1 standard and safe conversion checklist grounded in the existing `touknee/SideQuests` registry. The Attachments screen stores up to 20 MB per file (images, PDF, ZIP) in the currently authoritative record repository, verifies each upload by reading back its content, and indexes it in `sidequests-assets/<ID>/manifest.json`. Images, videos and audio use inline previews/players; PDFs open in a separate browser tab and ZIP/other files download. Uploads require GitHub Contents read/write permissions. The current implementation has not been build- or browser-tested, and the historical SideQuests records have not been bulk converted.
+
+## Initial portfolio import — 2026-11-15
+
+Fifteen identity-only records have been added on the feature branch: P000–P011, T000, T001 and E000. These were seeded from the actual `touknee/SideQuests` canonical registry and dated checkpoint, not from generated example projects. Every record includes `sourceReferences` and `importStatus: "identity-only"`; its empty tasks, milestones and notes **do not mean no work exists**. Statuses are source-snapshot labels and may be superseded by more recent documentation. Import timestamps indicate import time, not original project creation time.
+
+Next reconciliation gate: inspect each field guide, historical decisions, and progress evidence; populate tasks/milestones only after verification. Never automatically delete or move the original source repository's documents. P006 and P009 field-guide filenames were not established during this first pass, so only registry links were attached. Archive/trash and attachments are still untested. Full build/browser verification is pending.

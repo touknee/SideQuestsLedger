@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "P009",
+  "recordType": "sidequest",
+  "kind": "project",
+  "name": "SideQuests Hub",
+  "description": "",
+  "status": "Planned",
+  "lifecycle": "active",
+  "trackId": null,
+  "associations": [],
+  "milestones": [],
+  "tasks": [],
+  "notes": [],
+  "sourceReferences": [
+    {
+      "label": "Canonical registry",
+      "repository": "touknee/SideQuests",
+      "path": "docs/SIDE-QUEST-BACKLOG.md",
+      "url": "https://github.com/touknee/SideQuests/blob/main/docs/SIDE-QUEST-BACKLOG.md"
+    }
+  ],
+  "importStatus": "identity-only",
+  "importedAt": "2026-11-15T00:00:00.000Z",
+  "createdAt": "2026-11-15T00:00:00.000Z",
+  "updatedAt": "2026-11-15T00:00:00.000Z"
+}
